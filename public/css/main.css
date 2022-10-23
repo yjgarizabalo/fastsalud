@@ -16,7 +16,7 @@ body {
     padding: 15px;
 }
 
-.form-signin .form-floating:focus-within {
+.form-signin .form-login:focus-within {
     z-index: 2;
 }
 
