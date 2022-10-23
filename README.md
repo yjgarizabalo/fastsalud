@@ -1,2 +1,2 @@
 # Fastsalud
-Plantilla informativa para web de viaje, turismo, hotel, vacaciones, etc..
+Fastsalud es una plataforma para registar pacienes de manera digital.

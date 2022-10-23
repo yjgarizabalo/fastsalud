@@ -15,13 +15,26 @@ app.post('/registrarPaciente', function (req, res) {
     connection.connect(function (err) {
         if (err) console.log(err);
 
-        var consulta = "INSERT INTO paciente(nombre, identificacion, eps, telefono) VALUES('" + nombre + "', '" + identificacion + "', '" + eps + "', '" + telefono + "')";
+        var consultaidentifiacion = "SELECT identificacion FROM paciente"
 
-        connection.query(consulta, function (err, data) {
-            let paciente = [{ nombre: nombre, identificacion: identificacion, eps: eps, telefono: telefono, id: data.insertId }];
-            if (err) console.log(err);
-            res.render(path.join(__dirname, view_paciente), { paciente });
-        });
+        connection.query()
+
+        console.log(consultaidentifiacion);
+
+        if (consultaidentifiacion === identificacion) {
+            console.log("El usario ya el existe")
+            return false;
+        } else {
+            var consulta = "INSERT INTO paciente(nombre, identificacion, eps, telefono) VALUES('" + nombre + "', '" + identificacion + "', '" + eps + "', '" + telefono + "')";
+
+            connection.query(consulta, function (err, data) {
+                let paciente = [{ nombre: nombre, identificacion: identificacion, eps: eps, telefono: telefono, id: data.insertId }];
+                if (err) console.log(err);
+                res.render(path.join(__dirname, view_paciente), { paciente });
+            });
+        }
+
+
     });
 });
 
