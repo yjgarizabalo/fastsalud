@@ -4,34 +4,116 @@ const path = require("path");
 const app = express();
 app.use(morgan('dev'));
 app.set('view engine', 'ejs')
+const connection = require('./model/conexionBd');
+const view_paciente = './view/pacientes'
 
-// HOME
-app.get('/', function (req, res) {
-    res.render(__dirname + "/view/inicio");
-});
 
-// RERGISTAR PACIENTE
-app.get('/registrarPaciente', function (req, res) {
-    res.render(__dirname + "/view/registrarPaciente");
-});
-
-app.get('/buscarPaciente', function (req, res) {
-    res.render(path.join(__dirname, "/view/buscarPaciente"), { paciente: [] });
-});
-
+// INICIAR SESION
 app.get('/iniciarSesion', function (req, res) {
     res.render(__dirname + "/view/iniciarSesion");
 });
 
+// REGISTRAR GESTORES
+app.get('/registrarse', function (req, res) {
+    res.render(__dirname + "/view/registrarse")
+});
+
+// LOGIN
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+
+// SESSION
+const session = require('express-session')
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+}))
+
+// DOTENV
+const dotenv = require('dotenv')
+dotenv.config({ path: '/.env' })
+
+
+// AUTHENTICACION EN PAGINAS
+app.get('/', (req, res) => {
+    if (req.session.iniciado) {
+        res.render(__dirname + "/view/inicio", {
+            login: true,
+            nombre: req.session.nombre
+        })
+    } else {
+        res.render(__dirname + "/view/inicio", {
+            login: false,
+            nombre: 'Debe iniciar sesion'
+        })
+    }
+})
+
+// CERRAR SESION
+app.get('/cerrar-sesion', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/')
+    })
+})
+
+
+// REGISTRAR PACIENTE
+app.get('/registrarPaciente', (req, res) => {
+    res.render(path.join(__dirname, "/view/registrarPaciente"), {
+        paciente: [],
+        login: true,
+        nombre: req.session.nombre
+    })
+})
+
+// BUSCAR PACIENTE
+app.get('/buscarPaciente', (req, res) => {
+    res.render(path.join(__dirname, "/view/buscarPaciente"), {
+        paciente: [],
+        login: true,
+        nombre: req.session.nombre
+    })
+})
+app.post('/registrarPaciente', (req, res) => {
+    let { nombre, identificacion, eps, telefono } = req.body;
+    let nombre_sesion = req.session.nombre;
+    connection.connect(function (err) {
+        if (err) console.log(err);
+
+        var consulta = "INSERT INTO paciente(nombre, identificacion, eps, telefono) VALUES('" + nombre + "', '" + identificacion + "', '" + eps + "', '" + telefono + "')";
+
+        connection.query(consulta, function (err, data) {
+            let paciente = [{ nombre: nombre, identificacion: identificacion, eps: eps, telefono: telefono, id: data.insertId }];
+            if (err) console.log(err);
+            res.render(path.join(__dirname, view_paciente), { paciente, login: true, nombre_sesion });
+        });
+
+
+    });
+})
+
+
+// PACIENTE CREADO
+app.post('/pacientes', (req, res) => {
+    res.render(path.join(__dirname, "/view/pacientes"), {
+        login: true,
+        nombre: req.session.nombre
+    });
+})
 
 // MIDALWARES
-app.use(require(__dirname + "/controller/registrarPaciente"))
+// app.use(require(__dirname + "/controller/registrarPaciente"))
 
-app.use(require(__dirname + "/controller/buscar"));
+// app.use(require(__dirname + "/controller/buscar"))
 
 app.use(require(__dirname + "/controller/listarBusqueda"))
 
-app.use(require(__dirname + "/controller/listarPaciente"))
+// app.use(require(__dirname + "/controller/listarPaciente"))
+
+app.use(require(__dirname + "/controller/register"))
+
+app.use(require(__dirname + "/controller/authenticacion"))
 
 // ARCHIVOS ESTATICOS
 
@@ -48,5 +130,5 @@ app.use(function (req, res) {
 
 // SERVIDOR
 app.listen(7000)
-console.log(`[fastsalud] server en el puerto ${7000}`);
+console.log(`[fastsalud] server en el puerto || ${7000}`);
 

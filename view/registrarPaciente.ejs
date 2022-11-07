@@ -44,6 +44,28 @@
               <li><a class="dropdown-item" href="/">Hospitalisación</a></li>
             </ul>
           </li>
+          <a>
+            <% login %>
+          </a>
+          <% if(login) { %>
+            <li class="nav-item">
+              <a class="nav-link fw-bold text-success">
+                <%= nombre %>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cerrar-sesion"> Cerrar Sesión </a>
+            </li>
+            <% } else { %>
+              <li class="nav-item">
+                <a class="nav-link fw-bold">
+                  <%= nombre %>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-outline-info" href="/iniciarSesion"> Iniciar sesión</a>
+              </li>
+              <% } %>
         </ul>
       </div>
     </div>

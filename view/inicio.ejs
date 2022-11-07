@@ -28,7 +28,7 @@
             <a class="nav-link active" aria-current="page" href="/">Inicio</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled" href="/">Registrar Paciente</a>
+            <a class="nav-link disabled" href="/registrarPaciente">Registrar Paciente</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/buscarPaciente">Consultar Paciente</a>
@@ -45,7 +45,26 @@
               </li>
               <li><a class="dropdown-item" href="/">Hospitalisación</a></li>
             </ul>
+            <% if(login) { %>
+          <li class="nav-item">
+            <a class="nav-link fw-bold text-success">
+              <%= nombre %>
+            </a>
           </li>
+          <li class="nav-item">
+
+            <a class="nav-link" href="/cerrar-sesion"> Cerrar Sesión </a>
+          </li>
+          <% } else { %>
+            <li class="nav-item">
+              <a class="nav-link fw-bold  text-danger">
+                <%= nombre %>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-info" href="/iniciarSesion"> Iniciar sesión</a>
+            </li>
+            <% } %>
         </ul>
       </div>
     </div>
@@ -59,7 +78,11 @@
           <p class="lead">Fastersalud es una plataforma para registar pacienes de manera digital.</p>
           <hr class="my-4">
           <p>Seamos amigables con el medio ambiente, no registremos pacientes en papel. 🌲</p>
-          <a class="btn btn-info btn-lg" href="/registrarPaciente" role="button">Registrar Paciente</a>
+          <% if(login) { %>
+            <a class="btn btn-info btn-lg" href="/registrarPaciente" role="button">Registrar Paciente</a>
+            <% } else {%>
+              <a class="btn btn-info btn-lg" href="/iniciarSesion" role="button">Iniciar Sesión</a>
+              <%} %>
         </div>
       </div>
     </div>

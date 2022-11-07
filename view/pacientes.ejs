@@ -29,7 +29,7 @@
             <a class="nav-link disabled" href="/">Registrar Paciente</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/pacientes">Consultar paciente</a>
+            <a class="nav-link" href="/buscarpaciente">Consultar paciente</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -44,6 +44,25 @@
               <li><a class="dropdown-item" href="/">Hospitalisación</a></li>
             </ul>
           </li>
+          <% if(login) { %>
+            <li class="nav-item">
+              <a class="nav-link fw-bold text-danger">
+                <%= nombre_sesion %>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cerrar-sesion"> Cerrar Sesión </a>
+            </li>
+            <% } else { %>
+              <li class="nav-item">
+                <a class="nav-link fw-bold">
+                  <%= nombre_sesion %>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-outline-info" href="/iniciarSesion"> Iniciar sesión</a>
+              </li>
+              <% } %>
         </ul>
       </div>
     </div>
