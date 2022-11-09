@@ -107,9 +107,9 @@ app.post('/pacientes', (req, res) => {
 
 // app.use(require(__dirname + "/controller/buscar"))
 
-app.use(require(__dirname + "/controller/listarBusqueda"))
-
 // app.use(require(__dirname + "/controller/listarPaciente"))
+
+app.use(require(__dirname + "/controller/listarBusqueda"))
 
 app.use(require(__dirname + "/controller/register"))
 
