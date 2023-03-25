@@ -62,6 +62,7 @@
         <table class="table">
           <thead>
             <tr>
+              <th scope="col">ID</th>
               <th scope="col">NOMBRE</th>
               <th scope="col">IDENTIFIACIÓN</th>
               <th scope="col">EPS</th>
@@ -73,6 +74,9 @@
             <% if(paciente.length> 0) { %>
               <% for(var i=0;i < paciente.length; i++) { %>
                 <tr>
+                  <td>
+                    <%-paciente[i].id%>
+                  </td>
                   <td>
                     <%-paciente[i].nombre%>
                   </td>
@@ -86,7 +90,7 @@
                     <%-paciente[i].telefono%>
                   </td>
                   <td>
-                    <a href="/" class="btn btn-primary">Editar</a>
+                    <a href="/editarPaciente/<%-paciente.id%>" class="btn btn-primary">Editar</a>
                     <a href="/" class="btn btn-danger">Elminar</a>
                   </td>
                 </tr>

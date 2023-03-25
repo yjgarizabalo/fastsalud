@@ -6,6 +6,7 @@ app.use(morgan('dev'));
 app.set('view engine', 'ejs')
 const connection = require('./model/conexionBd');
 const view_paciente = './view/pacientes'
+const view_editarPaciente = './view/editarPaciente'
 
 
 // INICIAR SESION
@@ -17,6 +18,11 @@ app.get('/iniciarSesion', function (req, res) {
 app.get('/registrarse', function (req, res) {
     res.render(__dirname + "/view/registrarse")
 });
+
+// // EDITAR PACIENTE
+// app.get('/editarPaciente', function (req, res) {
+//     res.render(__dirname + "/view/editarPaciente")
+// });
 
 // LOGIN
 app.use(express.urlencoded({ extended: false }))
@@ -91,6 +97,18 @@ app.post('/registrarPaciente', (req, res) => {
 
 
     });
+})
+
+//EDIGAR PACIENTE
+app.get('/editarPaciente/:id', (req, res) => {
+    const id = req.params.id;
+    connection.query(' SELECT * FROM paciente user WHERE id=?', [id], (err, results) => {
+        if (err) {
+            throw err;
+        } else {
+            res.render(path.join(__dirname, view_editarPaciente), { paciente: results[0] });
+        }
+    })
 })
 
 
