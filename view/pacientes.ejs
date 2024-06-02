@@ -103,13 +103,16 @@
                   <td>
                     <%-paciente[i].telefono%>
                   </td>
-                  <td><a href="/" class="btn btn-primary">Editar</a></td>
+                  <td>
+                    <a href="/editarPaciente/<%= paciente[i].id %>" class="btn btn-primary">Editar</a>
+                    <a href="/eliminarPaciente/<%= paciente[i].id %>" class="btn btn-danger">Eliminar</a>
+                  </td>
 
                 </tr>
                 <% } %>
                   <% }else{ %>
                     <tr>
-                      <td>paciente no encontrado</td>
+                      <td>Paciente no encontrado, Debes buscarme por el numero de identificación 💬</td>
                     </tr>
                     <%} %>
           </tbody>

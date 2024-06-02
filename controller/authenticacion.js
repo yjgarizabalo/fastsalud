@@ -1,55 +1,71 @@
 const connection = require('../model/conexionBd');
 const express = require("express");
-
-const app = express();
 const bodyParser = require("body-parser");
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }));
 const bcryptjs = require('bcryptjs');
 
-// RERGISTAR
+const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// AUTENTICAR
 app.post('/auth', async (req, res) => {
     const user = req.body.user;
     const password = req.body.password;
-    let passwordHaash = await bcryptjs.hash(password, 8)
 
     if (user && password) {
         connection.query('SELECT * FROM admin WHERE user = ?', [user], async (err, result) => {
-            if (result.length == 0 || !(await bcryptjs.compare(password, result[0].password))) {
+            if (err) {
+                console.error('Error en la consulta a la base de datos:', err);
                 res.render('../view/iniciarSesion', {
                     alert: true,
                     alertTitle: "Error",
-                    alertMessage: "Contraseña o usario incorrectos",
+                    alertMessage: "Error en la base de datos",
                     alertIcon: 'error',
                     showCancelButton: false,
                     time: false,
                     ruta: 'iniciarSesion'
-                })
-            } else {
-                req.session.iniciado = true
-                req.session.nombre = result[0].nombre
+                });
+                return;
+            }
+
+            if (!result || result.length === 0 || !(await bcryptjs.compare(password, result[0].password))) {
                 res.render('../view/iniciarSesion', {
                     alert: true,
-                    alertTitle: "Bien",
-                    alertMessage: "Authenticacion correcta",
-                    alertIcon: 'success',
+                    alertTitle: "Error",
+                    alertMessage: "Contraseña o usuario incorrectos",
+                    alertIcon: 'error',
                     showCancelButton: false,
-                    time: 1500,
-                    ruta: ''
-                })
+                    time: false,
+                    ruta: 'iniciarSesion'
+                });
+                return;
             }
-        })
+
+            // Autenticación exitosa
+            req.session.iniciado = true;
+            req.session.nombre = result[0].nombre;
+            res.render('../view/iniciarSesion', {
+                alert: true,
+                alertTitle: "Bien",
+                alertMessage: "Autenticación correcta",
+                alertIcon: 'success',
+                showCancelButton: false,
+                time: 1500,
+                ruta: ''
+            });
+        });
     } else {
         res.render('../view/iniciarSesion', {
             alert: true,
             alertTitle: "Advertencia",
-            alertMessage: "Ingresar usario y contraseña porfavor.",
+            alertMessage: "Ingrese usuario y contraseña, por favor.",
             alertIcon: 'warning',
             showCancelButton: false,
             time: 1500,
             ruta: 'iniciarSesion'
-        })
+        });
     }
-})
+});
 
-module.exports = app
+module.exports = app;
